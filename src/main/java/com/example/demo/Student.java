@@ -1,25 +1,70 @@
 package com.example.demo;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-
-@Entity //faz com que seja mapiado para uma tabela
+//Nome não precisa ser o mesmo nome, mas é melhor colocar um nome prorprio
+@Entity(name = "Student") //faz com que seja mapiado para uma tabela
+@Table(
+        name = "student",
+        uniqueConstraints = { //colocar um nome amigavel para o constrain do email
+                @UniqueConstraint(name = "student_email_unique", columnNames = "email")
+        }
+)
 public class Student {
 
     @Id //preciso dizer quem é a primary key para a tabela ser criada
+    @SequenceGenerator(
+            name = "student_sequence",
+            sequenceName = "student_sequence",
+            allocationSize = 1 //ir de 1,2,3,4
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "student_sequence"
+    )
+    @Column(
+            name = "id", //nome na tabela
+            updatable = false
+    )
     private Long id;
+
+    @Column(
+            name = "first_name", //nome na tabela
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private String firstName;
+
+    @Column(
+            name = "last_name", //nome na tabela
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private String lastName;
+
+    @Column(
+            name = "email", //nome na tabela
+            nullable = false,
+            columnDefinition = "TEXT"
+            //unique = true
+    )
     private String email;
+
+    @Column(
+            name = "age", //nome na tabela
+            nullable = false
+    )
     private Integer age;
 
-    public Student(Long id, String firstName, String lastName, String email, Integer age) {
-        this.id = id;
+//construções dos getters and setters - Constructor
+    public Student(String firstName, String lastName, String email, Integer age) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.age = age;
+    }
+    public Student(){
+
     }
 
     public Long getId() {
